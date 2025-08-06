@@ -71,13 +71,14 @@ Create `.vscode/mcp.json` in your project root:
       "command": "python3",
       "args": ["-m", "forceweaver_mcp_client"],
       "env": {
-        "FORCEWEAVER_API_KEY": "fk_your_api_key_here",
-        "SALESFORCE_ORG_ID": "your_org_id_here"
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
       }
     }
   }
 }
 ```
+
+**Note**: API keys and org IDs are passed as parameters to individual MCP tools, not as environment variables.
 
 ### **Step 3: Restart VS Code**
 - Close and reopen VS Code
@@ -110,13 +111,14 @@ Edit `~/.config/claude/claude_desktop_config.json`:
       "command": "python3",
       "args": ["-m", "forceweaver_mcp_client"],
       "env": {
-        "FORCEWEAVER_API_KEY": "fk_your_api_key_here",
-        "SALESFORCE_ORG_ID": "your_org_id_here"
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
       }
     }
   }
 }
 ```
+
+**Note**: API keys and org IDs are passed as parameters to individual MCP tools, not as environment variables.
 
 ### **Step 3: Restart Claude Desktop**
 - Close and reopen Claude Desktop

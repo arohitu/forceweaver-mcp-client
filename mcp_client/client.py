@@ -96,6 +96,10 @@ class ForceWeaverMCPClient:
             logger.error(f"Connection error calling {endpoint}: {e}")
             raise ConnectionError(f"Connection error: {str(e)}")
         
+        except (AuthenticationError, ConnectionError, ForceWeaverError):
+            # Re-raise our own exceptions as-is
+            raise
+        
         except Exception as e:
             logger.error(f"Unexpected error calling {endpoint}: {e}")
             raise ForceWeaverError(f"Unexpected error: {str(e)}")
@@ -190,7 +194,7 @@ async def revenue_cloud_health_check(
         "health/check",
         method="POST",
         forceweaver_api_key=forceweaver_api_key,
-        org_id=salesforce_org_id,
+        salesforce_org_id=salesforce_org_id,
         check_types=check_types or ["basic_org_info", "sharing_model", "bundle_analysis"],
         api_version=api_version or "v64.0"
     )
@@ -225,30 +229,28 @@ async def get_detailed_bundle_analysis(
         "health/check",
         method="POST",
         forceweaver_api_key=forceweaver_api_key,
-        org_id=salesforce_org_id,
+        salesforce_org_id=salesforce_org_id,
         check_types=["bundle_analysis"],
         api_version=api_version or "v64.0"
     )
 
 @mcp.tool()
-async def list_available_orgs(forceweaver_api_key: str, username: str) -> str:
+async def list_available_orgs(forceweaver_api_key: str) -> str:
     """
     List all Salesforce organizations connected to your ForceWeaver account.
     
     Args:
         forceweaver_api_key: Your ForceWeaver API key
-        username: Your ForceWeaver account username/email
     
     Returns:
         List of connected Salesforce organizations
     """
-    logger.info(f"Listing orgs for user: {username}")
+    logger.info("Listing available orgs")
     
     return await client.call_mcp_api(
         "orgs/list",
-        method="POST",
-        forceweaver_api_key=forceweaver_api_key,
-        username=username
+        method="GET",
+        forceweaver_api_key=forceweaver_api_key
     )
 
 @mcp.tool()
@@ -265,7 +267,7 @@ async def get_usage_summary(forceweaver_api_key: str) -> str:
     logger.info("Getting usage summary")
     
     return await client.call_mcp_api(
-        "usage",
+        "usage/summary",
         method="GET",
         forceweaver_api_key=forceweaver_api_key
     )

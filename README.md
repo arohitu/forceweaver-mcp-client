@@ -48,18 +48,22 @@ Create or update `.vscode/mcp.json`:
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "forceweaver": {
       "command": "python3",
-      "args": ["-m", "forceweaver_mcp_client"],
+      "args": ["-m", "mcp_client"],
       "env": {
-        "FORCEWEAVER_API_KEY": "your_api_key_here",
-        "SALESFORCE_ORG_ID": "your_org_id_here"
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
       }
     }
   }
 }
 ```
+
+**Important**: 
+- Use `mcpServers` (not `servers`) for VS Code MCP configuration
+- Ensure GitHub Copilot Chat is in **Agent mode**
+- API keys and org IDs are passed as parameters to individual MCP tools
 
 ### **Claude Desktop**
 
@@ -70,15 +74,16 @@ Update `~/.config/claude/claude_desktop_config.json`:
   "mcpServers": {
     "forceweaver": {
       "command": "python3",
-      "args": ["-m", "forceweaver_mcp_client"],
+      "args": ["-m", "mcp_client"],
       "env": {
-        "FORCEWEAVER_API_KEY": "your_api_key_here",
-        "SALESFORCE_ORG_ID": "your_org_id_here"
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
       }
     }
   }
 }
 ```
+
+**Note**: API keys and org IDs are passed as parameters to individual MCP tools, not as environment variables.
 
 ### **Environment Variables**
 
@@ -215,7 +220,7 @@ Enable debug logging:
 
 ```bash
 export MCP_LOG_LEVEL=DEBUG
-python -m forceweaver_mcp_client
+python -m mcp_client
 ```
 
 ---

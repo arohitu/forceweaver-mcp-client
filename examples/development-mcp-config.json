@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "forceweaver-dev": {
+      "command": "python3",
+      "args": ["-m", "mcp_client", "--stdio"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
+        "MCP_LOG_LEVEL": "DEBUG"
+      }
+    },
+    "forceweaver-local": {
+      "command": "python3",
+      "args": ["-m", "mcp_client", "--http"],
+      "env": {
+        "FORCEWEAVER_API_URL": "http://localhost:5000",
+        "MCP_TRANSPORT": "http",
+        "MCP_PORT": "8000",
+        "MCP_LOG_LEVEL": "DEBUG"
+      }
+    }
+  }
+}

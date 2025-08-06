@@ -4,8 +4,9 @@ Test suite for ForceWeaver MCP Client
 import pytest
 import asyncio
 from unittest.mock import AsyncMock, patch, MagicMock
-from forceweaver_mcp_client import ForceWeaverMCPClient
-from forceweaver_mcp_client.exceptions import (
+from aioresponses import aioresponses
+from mcp_client import ForceWeaverMCPClient
+from mcp_client.exceptions import (
     ForceWeaverError,
     AuthenticationError,
     ConnectionError
@@ -54,33 +55,31 @@ class TestForceWeaverMCPClient:
         assert "ForceWeaver API key is required" in str(exc_info.value)
     
     @pytest.mark.asyncio
-    async def test_successful_api_call(self, client, mock_session_response):
+    async def test_successful_api_call(self, client):
         """Test successful API call"""
-        with patch.object(client, '_get_session') as mock_get_session:
-            mock_session = AsyncMock()
-            mock_session.post.return_value.__aenter__.return_value = mock_session_response
-            mock_get_session.return_value = mock_session
+        with aioresponses() as m:
+            m.post(
+                'https://mcp.forceweaver.com/api/v1.0/health/check?format=mcp',
+                payload={'formatted_output': 'Test health check output'}
+            )
             
             result = await client.call_mcp_api(
                 "health/check",
                 forceweaver_api_key="fk_test_key",
-                org_id="test_org"
+                salesforce_org_id="test_org"
             )
             
             assert result == "Test health check output"
-            mock_session.post.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_authentication_error_response(self, client):
         """Test authentication error handling"""
-        mock_response = AsyncMock()
-        mock_response.status = 401
-        mock_response.text = AsyncMock(return_value="Unauthorized")
-        
-        with patch.object(client, '_get_session') as mock_get_session:
-            mock_session = AsyncMock()
-            mock_session.post.return_value.__aenter__.return_value = mock_response
-            mock_get_session.return_value = mock_session
+        with aioresponses() as m:
+            m.post(
+                'https://mcp.forceweaver.com/api/v1.0/health/check?format=mcp',
+                status=401,
+                payload={'error': 'Unauthorized'}
+            )
             
             with pytest.raises(AuthenticationError) as exc_info:
                 await client.call_mcp_api(
@@ -93,14 +92,12 @@ class TestForceWeaverMCPClient:
     @pytest.mark.asyncio
     async def test_rate_limit_error_response(self, client):
         """Test rate limit error handling"""
-        mock_response = AsyncMock()
-        mock_response.status = 429
-        mock_response.text = AsyncMock(return_value="Rate Limited")
-        
-        with patch.object(client, '_get_session') as mock_get_session:
-            mock_session = AsyncMock()
-            mock_session.post.return_value.__aenter__.return_value = mock_response
-            mock_get_session.return_value = mock_session
+        with aioresponses() as m:
+            m.post(
+                'https://mcp.forceweaver.com/api/v1.0/health/check?format=mcp',
+                status=429,
+                payload={'error': 'Rate Limited'}
+            )
             
             with pytest.raises(ForceWeaverError) as exc_info:
                 await client.call_mcp_api(
@@ -113,10 +110,11 @@ class TestForceWeaverMCPClient:
     @pytest.mark.asyncio
     async def test_connection_timeout(self, client):
         """Test connection timeout handling"""
-        with patch.object(client, '_get_session') as mock_get_session:
-            mock_session = AsyncMock()
-            mock_session.post.side_effect = asyncio.TimeoutError()
-            mock_get_session.return_value = mock_session
+        with aioresponses() as m:
+            m.post(
+                'https://mcp.forceweaver.com/api/v1.0/health/check?format=mcp',
+                exception=asyncio.TimeoutError()
+            )
             
             with pytest.raises(ConnectionError) as exc_info:
                 await client.call_mcp_api(
@@ -145,9 +143,9 @@ class TestMCPTools:
     @pytest.mark.asyncio
     async def test_revenue_cloud_health_check_tool(self):
         """Test revenue cloud health check tool"""
-        from forceweaver_mcp_client.client import revenue_cloud_health_check
+        from mcp_client.client import revenue_cloud_health_check
         
-        with patch('forceweaver_mcp_client.client.client') as mock_client:
+        with patch('mcp_client.client.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Health check result")
             
             result = await revenue_cloud_health_check(
@@ -160,7 +158,7 @@ class TestMCPTools:
                 "health/check",
                 method="POST",
                 forceweaver_api_key="fk_test_key",
-                org_id="test_org",
+                salesforce_org_id="test_org",
                 check_types=["basic_org_info", "sharing_model", "bundle_analysis"],
                 api_version="v64.0"
             )
@@ -168,9 +166,9 @@ class TestMCPTools:
     @pytest.mark.asyncio
     async def test_bundle_analysis_tool(self):
         """Test detailed bundle analysis tool"""
-        from forceweaver_mcp_client.client import get_detailed_bundle_analysis
+        from mcp_client.client import get_detailed_bundle_analysis
         
-        with patch('forceweaver_mcp_client.client.client') as mock_client:
+        with patch('mcp_client.client.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Bundle analysis result")
             
             result = await get_detailed_bundle_analysis(
@@ -183,7 +181,7 @@ class TestMCPTools:
                 "health/check",
                 method="POST",
                 forceweaver_api_key="fk_test_key",
-                org_id="test_org",
+                salesforce_org_id="test_org",
                 check_types=["bundle_analysis"],
                 api_version="v64.0"
             )
@@ -191,30 +189,28 @@ class TestMCPTools:
     @pytest.mark.asyncio
     async def test_list_orgs_tool(self):
         """Test list organizations tool"""
-        from forceweaver_mcp_client.client import list_available_orgs
+        from mcp_client.client import list_available_orgs
         
-        with patch('forceweaver_mcp_client.client.client') as mock_client:
+        with patch('mcp_client.client.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Organizations list")
             
             result = await list_available_orgs(
-                forceweaver_api_key="fk_test_key",
-                username="test@example.com"
+                forceweaver_api_key="fk_test_key"
             )
             
             assert result == "Organizations list"
             mock_client.call_mcp_api.assert_called_once_with(
                 "orgs/list",
-                method="POST",
-                forceweaver_api_key="fk_test_key",
-                username="test@example.com"
+                method="GET",
+                forceweaver_api_key="fk_test_key"
             )
     
     @pytest.mark.asyncio
     async def test_usage_summary_tool(self):
         """Test usage summary tool"""
-        from forceweaver_mcp_client.client import get_usage_summary
+        from mcp_client.client import get_usage_summary
         
-        with patch('forceweaver_mcp_client.client.client') as mock_client:
+        with patch('mcp_client.client.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Usage summary")
             
             result = await get_usage_summary(
@@ -223,7 +219,7 @@ class TestMCPTools:
             
             assert result == "Usage summary"
             mock_client.call_mcp_api.assert_called_once_with(
-                "usage",
+                "usage/summary",
                 method="GET",
                 forceweaver_api_key="fk_test_key"
             )

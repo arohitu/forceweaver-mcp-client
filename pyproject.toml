@@ -40,6 +40,7 @@ dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
+    "aioresponses>=0.7.4",
     "black>=23.0.0",
     "flake8>=6.0.0",
     "mypy>=1.0.0",
@@ -54,11 +55,11 @@ Repository = "https://github.com/forceweaver/mcp-client.git"
 Changelog = "https://github.com/forceweaver/mcp-client/blob/main/CHANGELOG.md"
 
 [project.scripts]
-forceweaver-mcp = "forceweaver_mcp_client.client:main"
+forceweaver-mcp = "mcp_client.client:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["forceweaver_mcp_client*"]
+include = ["mcp_client*"]
 
 [tool.black]
 line-length = 88
@@ -109,7 +110,7 @@ python_functions = ["test_*"]
 asyncio_mode = "auto"
 
 [tool.coverage.run]
-source = ["forceweaver_mcp_client"]
+source = ["mcp_client"]
 omit = [
     "*/tests/*",
     "*/test_*",

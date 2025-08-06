@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug ForceWeaver MCP Server",
+      "type": "python",
+      "request": "launch",
+      "module": "mcp_client",
+      "console": "integratedTerminal",
+      "env": {
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
+        "MCP_TRANSPORT": "stdio",
+        "MCP_LOG_LEVEL": "DEBUG"
+      },
+      "args": ["--stdio"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Debug ForceWeaver MCP Server (HTTP)",
+      "type": "python", 
+      "request": "launch",
+      "module": "mcp_client",
+      "console": "integratedTerminal",
+      "env": {
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
+        "MCP_TRANSPORT": "http",
+        "MCP_PORT": "8000",
+        "MCP_LOG_LEVEL": "DEBUG"
+      },
+      "args": ["--http"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
