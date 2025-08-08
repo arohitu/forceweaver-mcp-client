@@ -5,7 +5,6 @@
 [![PyPI version](https://badge.fury.io/py/forceweaver-mcp-server.svg)](https://badge.fury.io/py/forceweaver-mcp-server)
 [![Python Support](https://img.shields.io/pypi/pyversions/forceweaver-mcp-server.svg)](https://pypi.org/project/forceweaver-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/forceweaver/forceweaver-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/forceweaver/forceweaver-mcp-server/actions/workflows/ci.yml)
 [![Claude](https://img.shields.io/badge/Works_with-Claude-orange)](https://claude.ai) [![Cursor](https://img.shields.io/badge/Works_with-Cursor-white)](https://cursor.so) [![Cline](https://img.shields.io/badge/Works_with-Cline-purple)](https://github.com/ClineLabs/cline)
 
 The ForceWeaver MCP Client provides seamless integration between AI agents and Salesforce Revenue Cloud health checking services. Built following MCP Security Best Practices, it offers enterprise-grade reliability and security.
