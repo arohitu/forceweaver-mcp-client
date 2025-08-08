@@ -6,8 +6,8 @@
       "args": ["-m", "src"],
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
-        "FORCEWEAVER_API_KEY": "fk_DQs-8Oj4d_SPK4x5f7HSmokBzfoBGqBaBKq2qjEvfas",
-        "SALESFORCE_ORG_ID": "entdev1",
+        "FORCEWEAVER_API_KEY": "fk_cb8Fa1tL3czFIuqZgx-88M1el1WLNAJNWw5kdcmf1uM",
+        "SALESFORCE_ORG_ID": "primrcorg",
         "MCP_LOG_LEVEL": "DEBUG"
       }
     }
