@@ -1,12 +1,12 @@
 """
-ForceWeaver MCP Client
+ForceWeaver MCP Server
 Professional Salesforce Revenue Cloud health checking for AI agents
 
-This package provides a lightweight MCP client that connects to the ForceWeaver
+This package provides a lightweight MCP server that connects to the ForceWeaver
 cloud service for comprehensive Salesforce health checks.
 
 Website: https://mcp.forceweaver.com
-Documentation: https://github.com/forceweaver/mcp-client
+Documentation: https://github.com/forceweaver/forceweaver-mcp-server
 Support: https://mcp.forceweaver.com/support
 """
 

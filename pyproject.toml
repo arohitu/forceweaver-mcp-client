@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "forceweaver-mcp-client"
+name = "forceweaver-mcp-server"
 version = "1.1.0"
 authors = [
     {name = "ForceWeaver Team", email = "support@forceweaver.com"},
@@ -49,10 +49,10 @@ dev = [
 
 [project.urls]
 Homepage = "https://mcp.forceweaver.com"
-Documentation = "https://github.com/forceweaver/mcp-client"
-Repository = "https://github.com/forceweaver/mcp-client.git"
-"Bug Tracker" = "https://github.com/forceweaver/mcp-client/issues"
-Changelog = "https://github.com/forceweaver/mcp-client/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/forceweaver/forceweaver-mcp-server"
+Repository = "https://github.com/forceweaver/forceweaver-mcp-server.git"
+"Bug Tracker" = "https://github.com/forceweaver/forceweaver-mcp-server/issues"
+Changelog = "https://github.com/forceweaver/forceweaver-mcp-server/blob/main/CHANGELOG.md"
 
 [project.scripts]
 forceweaver-mcp = "src.server:main"

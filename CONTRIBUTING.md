@@ -83,8 +83,8 @@ Any other context about the feature request.
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/your-username/forceweaver-mcp-client.git
-   cd forceweaver-mcp-client
+   git clone https://github.com/your-username/forceweaver-mcp-server.git
+cd forceweaver-mcp-server
    ```
 
 2. **Create virtual environment**

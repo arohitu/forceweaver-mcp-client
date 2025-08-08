@@ -2,10 +2,10 @@
 
 **Professional Salesforce Revenue Cloud health checking for AI agents**
 
-[![PyPI version](https://badge.fury.io/py/forceweaver-mcp-client.svg)](https://badge.fury.io/py/forceweaver-mcp-client)
-[![Python Support](https://img.shields.io/pypi/pyversions/forceweaver-mcp-client.svg)](https://pypi.org/project/forceweaver-mcp-client/)
+[![PyPI version](https://badge.fury.io/py/forceweaver-mcp-server.svg)](https://badge.fury.io/py/forceweaver-mcp-server)
+[![Python Support](https://img.shields.io/pypi/pyversions/forceweaver-mcp-server.svg)](https://pypi.org/project/forceweaver-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/forceweaver/mcp-client/workflows/Tests/badge.svg)](https://github.com/forceweaver/mcp-client/actions)
+[![CI](https://github.com/forceweaver/forceweaver-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/forceweaver/forceweaver-mcp-server/actions/workflows/ci.yml)
 
 The ForceWeaver MCP Client provides seamless integration between AI agents and Salesforce Revenue Cloud health checking services. Built following MCP Security Best Practices, it offers enterprise-grade reliability and security.
 
@@ -27,7 +27,7 @@ The ForceWeaver MCP Client provides seamless integration between AI agents and S
 ### **Installation**
 
 ```bash
-pip install forceweaver-mcp-client
+pip install forceweaver-mcp-server
 ```
 
 ### **Get Your API Key**
@@ -222,8 +222,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 **Support**
 
-- **Documentation**: [GitHub Repository](https://github.com/arohitu/forceweaver-mcp-server)
-- **Issues**: [GitHub Issues](https://github.com/arohitu/forceweaver-mcp-server/issues)
+- **Documentation**: [GitHub Repository](https://github.com/forceweaver/forceweaver-mcp-server)
+- **Issues**: [GitHub Issues](https://github.com/forceweaver/forceweaver-mcp-server/issues)
 - **Support**: [ForceWeaver Support](https://mcp.forceweaver.com/support)
 - **Dashboard**: [ForceWeaver Dashboard](https://mcp.forceweaver.com/dashboard)
 
