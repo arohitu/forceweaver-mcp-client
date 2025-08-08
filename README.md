@@ -2,8 +2,8 @@
 
 **Professional Salesforce Revenue Cloud health checking for AI agents**
 
-[![PyPI version](https://badge.fury.io/py/forceweaver-mcp-server.svg)](https://badge.fury.io/py/forceweaver-mcp-server)
-[![Python Support](https://img.shields.io/pypi/pyversions/forceweaver-mcp-server.svg)](https://pypi.org/project/forceweaver-mcp-server/)
+[![PyPI version](https://badge.fury.io/py/forceweaver-mcp-client.svg)](https://badge.fury.io/py/forceweaver-mcp-client)
+[![Python Support](https://img.shields.io/pypi/pyversions/forceweaver-mcp-client.svg)](https://pypi.org/project/forceweaver-mcp-client/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude](https://img.shields.io/badge/Works_with-Claude-orange)](https://claude.ai) [![Cursor](https://img.shields.io/badge/Works_with-Cursor-white)](https://cursor.so) [![Cline](https://img.shields.io/badge/Works_with-Cline-purple)](https://github.com/ClineLabs/cline)
 
