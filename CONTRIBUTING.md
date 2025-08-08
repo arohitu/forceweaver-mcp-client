@@ -127,13 +127,13 @@ We follow Python best practices:
 
 ```bash
 # Format code
-black forceweaver_mcp_client/
+black src/
 
 # Check linting
-flake8 forceweaver_mcp_client/
+flake8 src/
 
 # Type checking
-mypy forceweaver_mcp_client/
+mypy src/
 
 # Run all checks
 make lint  # If Makefile is available
@@ -148,7 +148,7 @@ make lint  # If Makefile is available
 pytest
 
 # Run with coverage
-pytest --cov=forceweaver_mcp_client
+pytest --cov=src
 
 # Run specific test file
 pytest tests/test_client.py
@@ -168,8 +168,8 @@ pytest -v
 
 ```python
 import pytest
-from forceweaver_mcp_client import ForceWeaverMCPClient
-from forceweaver_mcp_client.exceptions import AuthenticationError
+from src import ForceWeaverMCPClient
+from src.exceptions import AuthenticationError
 
 class TestForceWeaverMCPClient:
     @pytest.fixture
@@ -179,26 +179,6 @@ class TestForceWeaverMCPClient:
     async def test_authentication_error(self, client):
         with pytest.raises(AuthenticationError):
             await client.call_mcp_api("health/check", forceweaver_api_key="invalid")
-```
-
-## 📚 **Documentation**
-
-### Documentation Standards
-
-- **Clear and concise** explanations
-- **Code examples** for complex features
-- **Up-to-date** with current functionality
-- **Proper markdown formatting**
-
-### Documentation Structure
-
-```
-docs/
-├── SETUP.md              # Installation and setup
-├── CONFIGURATION.md      # Configuration options
-├── API_REFERENCE.md      # API documentation
-├── TROUBLESHOOTING.md    # Common issues
-└── SECURITY.md           # Security guidelines
 ```
 
 ## 🔀 **Pull Request Process**
@@ -271,7 +251,7 @@ If you have questions about contributing:
 
 ## 📄 **Code of Conduct**
 
-This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms. Please read our [Code of Conduct](CODE_OF_CONDUCT.md) for more information.
 
 ## 🎉 **Recognition**
 

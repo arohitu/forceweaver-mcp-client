@@ -15,11 +15,7 @@ __author__ = "ForceWeaver Team"
 __email__ = "support@forceweaver.com"
 __license__ = "MIT"
 
-"""
-ForceWeaver MCP Client - Professional Salesforce Revenue Cloud health checking for AI agents
-"""
-
-from .client import ForceWeaverMCPClient
+from .server import ForceWeaverMCPClient
 from .exceptions import ForceWeaverError, AuthenticationError, ConnectionError
 
 __all__ = [

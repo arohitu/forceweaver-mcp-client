@@ -48,12 +48,15 @@ Create or update `.vscode/mcp.json`:
 
 ```json
 {
-  "mcpServers": {
+  "servers": {
     "forceweaver": {
+      "type": "stdio",
       "command": "python3",
-      "args": ["-m", "mcp_client"],
+      "args": ["-m", "src"],
       "env": {
-        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
+        "FORCEWEAVER_API_KEY": "YOUR_API_KEY_HERE",
+        "SALESFORCE_ORG_ID": "ORG_ID_HERE"
       }
     }
   }
@@ -61,7 +64,7 @@ Create or update `.vscode/mcp.json`:
 ```
 
 **Important**: 
-- Use `mcpServers` (not `servers`) for VS Code MCP configuration
+- Make sure the server is running.
 - Ensure GitHub Copilot Chat is in **Agent mode**
 - API keys and org IDs are passed as parameters to individual MCP tools
 
@@ -74,7 +77,7 @@ Update `~/.config/claude/claude_desktop_config.json`:
   "mcpServers": {
     "forceweaver": {
       "command": "python3",
-      "args": ["-m", "mcp_client"],
+      "args": ["-m", "src"],
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
       }
@@ -144,35 +147,6 @@ ForceWeaver MCP Client implements comprehensive security measures:
 
 ---
 
-## 🛠️ **Development**
-
-### **Setup Development Environment**
-
-```bash
-git clone https://github.com/forceweaver/mcp-client.git
-cd mcp-client
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-pip install -e .
-```
-
-### **Run Tests**
-
-```bash
-pytest tests/
-```
-
-### **Code Quality**
-
-```bash
-black forceweaver_mcp_client/
-flake8 forceweaver_mcp_client/
-mypy forceweaver_mcp_client/
-```
-
----
-
 ## 📊 **Supported Platforms**
 
 | Platform | Status | Transport | Notes |
@@ -220,18 +194,8 @@ Enable debug logging:
 
 ```bash
 export MCP_LOG_LEVEL=DEBUG
-python -m mcp_client
+python -m src
 ```
-
----
-
-## 📚 **Documentation**
-
-- **[Setup Guide](docs/SETUP.md)** - Detailed installation instructions
-- **[Configuration Guide](docs/CONFIGURATION.md)** - Advanced configuration options
-- **[API Reference](docs/API_REFERENCE.md)** - Complete API documentation
-- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
-- **[Security Guide](docs/SECURITY.md)** - Security best practices
 
 ---
 
@@ -258,8 +222,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 **Support**
 
-- **Documentation**: [GitHub Repository](https://github.com/forceweaver/mcp-client)
-- **Issues**: [GitHub Issues](https://github.com/forceweaver/mcp-client/issues)
+- **Documentation**: [GitHub Repository](https://github.com/arohitu/forceweaver-mcp-server)
+- **Issues**: [GitHub Issues](https://github.com/arohitu/forceweaver-mcp-server/issues)
 - **Support**: [ForceWeaver Support](https://mcp.forceweaver.com/support)
 - **Dashboard**: [ForceWeaver Dashboard](https://mcp.forceweaver.com/dashboard)
 

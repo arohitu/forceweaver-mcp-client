@@ -55,11 +55,11 @@ Repository = "https://github.com/forceweaver/mcp-client.git"
 Changelog = "https://github.com/forceweaver/mcp-client/blob/main/CHANGELOG.md"
 
 [project.scripts]
-forceweaver-mcp = "mcp_client.client:main"
+forceweaver-mcp = "src.server:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["mcp_client*"]
+include = ["src*"]
 
 [tool.black]
 line-length = 88
@@ -110,7 +110,7 @@ python_functions = ["test_*"]
 asyncio_mode = "auto"
 
 [tool.coverage.run]
-source = ["mcp_client"]
+source = ["src"]
 omit = [
     "*/tests/*",
     "*/test_*",

@@ -1,10 +1,14 @@
 {
-  "mcpServers": {
+  "servers": {
     "forceweaver": {
+      "type": "stdio",
       "command": "python3",
-      "args": ["-m", "mcp_client"],
+      "args": ["-m", "src"],
       "env": {
-        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
+        "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
+        "FORCEWEAVER_API_KEY": "fk_DQs-8Oj4d_SPK4x5f7HSmokBzfoBGqBaBKq2qjEvfas",
+        "SALESFORCE_ORG_ID": "entdev1",
+        "MCP_LOG_LEVEL": "DEBUG"
       }
     }
   }

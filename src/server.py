@@ -112,11 +112,20 @@ class ForceWeaverMCPClient:
         if response.status == 200:
             result = await response.json()
             
-            # Return formatted output if available
+            # DEBUG: Log what we actually receive
+            logger.info(f"API Response keys: {list(result.keys())}")
+            logger.info(f"Has formatted_output: {'formatted_output' in result}")
             if "formatted_output" in result:
+                logger.info(f"formatted_output length: {len(result['formatted_output'])}")
+            
+            # Return formatted output if available (MCP format)
+            if "formatted_output" in result:
+                logger.info("Using formatted_output from backend")
                 return result["formatted_output"]
             elif "success" in result and result["success"]:
-                return str(result.get("data", result))
+                logger.info("Using custom formatting for raw JSON")
+                # Format the raw JSON response for better display
+                return self._format_health_check_response(result)
             else:
                 raise ForceWeaverError(f"API Error: {result.get('message', 'Unknown error')}")
         
@@ -155,6 +164,69 @@ class ForceWeaverMCPClient:
                 f"{error_text}\n\nContact support: https://mcp.forceweaver.com/support"
             )
     
+    def _format_health_check_response(self, result):
+        """Format health check response for better display in chat"""
+        lines = []
+        
+        # Header
+        lines.append("🔍 **ForceWeaver Revenue Cloud Health Check Report**")
+        lines.append("=" * 60)
+        
+        # Basic info
+        if "org_id" in result:
+            lines.append(f"📊 Organization: {result.get('org_name', result['org_id'])}")
+        
+        # Summary
+        if "summary" in result:
+            summary = result["summary"]
+            lines.append(f"⏱️ Execution Time: {summary.get('execution_time_ms', 0)}ms")
+            lines.append(f"📅 Generated: {result.get('timestamp', 'N/A')}")
+            lines.append("")
+            lines.append(f"🎯 **Overall Health Score: {summary.get('overall_score', 0)}%** (Grade: {self._get_grade(summary.get('overall_score', 0))})")
+            lines.append("")
+        
+        # Results section
+        if "results" in result and "results" in result["results"]:
+            lines.append("### Results")
+            lines.append("")
+            
+            for check_type, check_result in result["results"]["results"].items():
+                lines.append(f"**{check_type.replace('_', ' ').title()}**")
+                lines.append(f"Status: {check_result.get('status', 'unknown').upper()}")
+                lines.append(f"Score: {check_result.get('score', 0)}%")
+                
+                if "details" in check_result:
+                    lines.append("Details:")
+                    for detail in check_result["details"]:
+                        lines.append(f"  • {detail}")
+                lines.append("")
+        
+        # Footer
+        lines.append("---")
+        if "summary" in result:
+            lines.append(f"💰 Cost: {result['summary'].get('cost_cents', 0)}¢")
+            lines.append(f"✅ Checks Performed: {result['summary'].get('checks_performed', 0)}")
+        
+        lines.append("")
+        lines.append("For more detailed analysis or specific recommendations, please let me know!")
+        
+        return "\n".join(lines)
+    
+    def _get_grade(self, score):
+        """Convert numeric score to letter grade"""
+        if score >= 90:
+            return "A+"
+        elif score >= 80:
+            return "A"
+        elif score >= 70:
+            return "B"
+        elif score >= 60:
+            return "C"
+        elif score >= 50:
+            return "D"
+        else:
+            return "F"
+    
     async def close(self):
         """Close HTTP session"""
         if self.session:
@@ -165,8 +237,8 @@ client = ForceWeaverMCPClient()
 
 @mcp.tool()
 async def revenue_cloud_health_check(
-    forceweaver_api_key: str,
-    salesforce_org_id: str,
+    forceweaver_api_key: Optional[str] = None,
+    salesforce_org_id: Optional[str] = None,
     check_types: Optional[List[str]] = None,
     api_version: Optional[str] = None
 ) -> str:
@@ -180,29 +252,51 @@ async def revenue_cloud_health_check(
     - Attribute picklist integrity validation
     
     Args:
-        forceweaver_api_key: Your ForceWeaver API key from https://mcp.forceweaver.com/dashboard/keys
-        salesforce_org_id: Your Salesforce org identifier (from connected orgs)
+        forceweaver_api_key: Your ForceWeaver API key (optional if set via environment)
+        salesforce_org_id: Your Salesforce org identifier (optional if set via environment)
         check_types: Optional list of specific checks to run (default: all basic checks)
         api_version: Optional Salesforce API version (default: v64.0)
     
     Returns:
         Comprehensive health report with scores, findings, and recommendations
     """
-    logger.info(f"Starting health check for org: {salesforce_org_id}")
+    # Use environment variables as fallback
+    api_key = forceweaver_api_key or os.environ.get("FORCEWEAVER_API_KEY")
+    org_id = salesforce_org_id or os.environ.get("SALESFORCE_ORG_ID")
+    
+    # Enhanced debugging for credential issues
+    logger.info(f"Revenue Cloud Health Check - API key provided as param: {bool(forceweaver_api_key)}")
+    logger.info(f"Revenue Cloud Health Check - API key from env: {bool(os.environ.get('FORCEWEAVER_API_KEY'))}")
+    logger.info(f"Revenue Cloud Health Check - Org ID provided as param: {bool(salesforce_org_id)}")
+    logger.info(f"Revenue Cloud Health Check - Org ID from env: {bool(os.environ.get('SALESFORCE_ORG_ID'))}")
+    logger.info(f"Revenue Cloud Health Check - Final API key available: {bool(api_key)}")
+    logger.info(f"Revenue Cloud Health Check - Final org ID available: {bool(org_id)}")
+    if api_key:
+        logger.info(f"API key starts with: {api_key[:10]}...")
+    
+    if not api_key:
+        logger.error("❌ API key missing in revenue_cloud_health_check")
+        raise AuthenticationError("I cannot analyze your Revenue Cloud bundle structure because your ForceWeaver API key is missing, invalid, or expired. Please update your API key in the prompt or environment and try again. If you need help updating the key, let me know!")
+    
+    if not org_id:
+        logger.error("❌ Org ID missing in revenue_cloud_health_check")  
+        raise AuthenticationError("To analyze your Revenue Cloud bundle structure, I need your Salesforce org ID. Please provide your Salesforce org identifier so I can proceed with the analysis.")
+    
+    logger.info(f"Starting health check for org: {org_id}")
     
     return await client.call_mcp_api(
         "health/check",
         method="POST",
-        forceweaver_api_key=forceweaver_api_key,
-        salesforce_org_id=salesforce_org_id,
+        forceweaver_api_key=api_key,
+        org_id=org_id,  # Backend expects 'org_id', not 'salesforce_org_id'
         check_types=check_types or ["basic_org_info", "sharing_model", "bundle_analysis"],
         api_version=api_version or "v64.0"
     )
 
 @mcp.tool()
 async def get_detailed_bundle_analysis(
-    forceweaver_api_key: str,
-    salesforce_org_id: str,
+    forceweaver_api_key: Optional[str] = None,
+    salesforce_org_id: Optional[str] = None,
     api_version: Optional[str] = None
 ) -> str:
     """
@@ -216,60 +310,82 @@ async def get_detailed_bundle_analysis(
     - Bundle complexity metrics and performance impact analysis
     
     Args:
-        forceweaver_api_key: Your ForceWeaver API key
-        salesforce_org_id: Your Salesforce org identifier
+        forceweaver_api_key: Your ForceWeaver API key (optional if set via environment)
+        salesforce_org_id: Your Salesforce org identifier (optional if set via environment)
         api_version: Optional Salesforce API version (default: v64.0)
     
     Returns:
         Detailed bundle analysis report with comprehensive statistics
     """
-    logger.info(f"Starting detailed bundle analysis for org: {salesforce_org_id}")
+    # Use environment variables as fallback
+    api_key = forceweaver_api_key or os.environ.get("FORCEWEAVER_API_KEY")
+    org_id = salesforce_org_id or os.environ.get("SALESFORCE_ORG_ID")
+    
+    if not api_key:
+        raise AuthenticationError("ForceWeaver API key is required. Provide it as parameter or set FORCEWEAVER_API_KEY environment variable.")
+    
+    if not org_id:
+        raise AuthenticationError("Salesforce Org ID is required. Provide it as parameter or set SALESFORCE_ORG_ID environment variable.")
+    
+    logger.info(f"Starting detailed bundle analysis for org: {org_id}")
     
     return await client.call_mcp_api(
         "health/check",
         method="POST",
-        forceweaver_api_key=forceweaver_api_key,
-        salesforce_org_id=salesforce_org_id,
+        forceweaver_api_key=api_key,
+        org_id=org_id,
         check_types=["bundle_analysis"],
         api_version=api_version or "v64.0"
     )
 
 @mcp.tool()
-async def list_available_orgs(forceweaver_api_key: str) -> str:
+async def list_available_orgs(forceweaver_api_key: Optional[str] = None) -> str:
     """
     List all Salesforce organizations connected to your ForceWeaver account.
     
     Args:
-        forceweaver_api_key: Your ForceWeaver API key
+        forceweaver_api_key: Your ForceWeaver API key (optional if set via environment)
     
     Returns:
         List of connected Salesforce organizations
     """
+    # Use environment variable as fallback
+    api_key = forceweaver_api_key or os.environ.get("FORCEWEAVER_API_KEY")
+    
+    if not api_key:
+        raise AuthenticationError("ForceWeaver API key is required. Provide it as parameter or set FORCEWEAVER_API_KEY environment variable.")
+    
     logger.info("Listing available orgs")
     
     return await client.call_mcp_api(
         "orgs/list",
         method="GET",
-        forceweaver_api_key=forceweaver_api_key
+        forceweaver_api_key=api_key
     )
 
 @mcp.tool()
-async def get_usage_summary(forceweaver_api_key: str) -> str:
+async def get_usage_summary(forceweaver_api_key: Optional[str] = None) -> str:
     """
     Get current usage statistics and subscription status.
     
     Args:
-        forceweaver_api_key: Your ForceWeaver API key
+        forceweaver_api_key: Your ForceWeaver API key (optional if set via environment)
     
     Returns:
         Usage summary and subscription status
     """
+    # Use environment variable as fallback
+    api_key = forceweaver_api_key or os.environ.get("FORCEWEAVER_API_KEY")
+    
+    if not api_key:
+        raise AuthenticationError("ForceWeaver API key is required. Provide it as parameter or set FORCEWEAVER_API_KEY environment variable.")
+    
     logger.info("Getting usage summary")
     
     return await client.call_mcp_api(
         "usage/summary",
         method="GET",
-        forceweaver_api_key=forceweaver_api_key
+        forceweaver_api_key=api_key
     )
 
 # Cleanup on shutdown

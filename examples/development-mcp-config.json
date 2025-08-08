@@ -2,7 +2,7 @@
   "mcpServers": {
     "forceweaver-dev": {
       "command": "python3",
-      "args": ["-m", "mcp_client", "--stdio"],
+      "args": ["-m", "src", "--stdio"],
       "cwd": "${workspaceFolder}",
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
@@ -11,7 +11,7 @@
     },
     "forceweaver-local": {
       "command": "python3",
-      "args": ["-m", "mcp_client", "--http"],
+      "args": ["-m", "src", "--http"],
       "env": {
         "FORCEWEAVER_API_URL": "http://localhost:5000",
         "MCP_TRANSPORT": "http",

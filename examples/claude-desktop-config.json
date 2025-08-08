@@ -2,7 +2,7 @@
   "mcpServers": {
     "forceweaver": {
       "command": "python3",
-      "args": ["-m", "mcp_client"],
+        "args": ["-m", "src"],
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com"
       }

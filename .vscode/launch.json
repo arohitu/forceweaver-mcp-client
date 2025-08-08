@@ -5,7 +5,7 @@
       "name": "Debug ForceWeaver MCP Server",
       "type": "python",
       "request": "launch",
-      "module": "mcp_client",
+              "module": "src",
       "console": "integratedTerminal",
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
@@ -19,7 +19,7 @@
       "name": "Debug ForceWeaver MCP Server (HTTP)",
       "type": "python", 
       "request": "launch",
-      "module": "mcp_client",
+              "module": "src",
       "console": "integratedTerminal",
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
