@@ -361,8 +361,10 @@ async def get_detailed_bundle_analysis(
     - Bundle complexity metrics and performance impact analysis
 
     Args:
-        forceweaver_api_key: Your ForceWeaver API key (optional if set via environment)
-        salesforce_org_id: Your Salesforce org identifier (optional if set via environment)
+        forceweaver_api_key: Your ForceWeaver API key (optional if set
+            via environment)
+        salesforce_org_id: Your Salesforce org identifier (optional if set
+            via environment)
         api_version: Optional Salesforce API version (default: v64.0)
 
     Returns:
