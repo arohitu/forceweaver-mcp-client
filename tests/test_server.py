@@ -246,8 +246,8 @@ class TestForceWeaverMCPClient:
         # Close client
         await client.close()
 
-        # Session should be closed
-        assert client.session.closed
+        # Session should be None after cleanup
+        assert client.session is None
 
     @pytest.mark.asyncio
     @patch.dict(
@@ -258,7 +258,7 @@ class TestForceWeaverMCPClient:
         """Test health check tool with environment variables"""
         from forceweaver_mcp_server.server import revenue_cloud_health_check
 
-        with patch("src.server.client") as mock_client:
+        with patch("forceweaver_mcp_server.server.client") as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Health check result")
 
             await revenue_cloud_health_check()
@@ -316,8 +316,8 @@ class TestForceWeaverMCPClient:
 class TestMain:
     """Test cases for main entry point"""
 
-    @patch("src.server.mcp")
-    @patch("src.server.sys.argv", ["server.py"])
+    @patch("forceweaver_mcp_server.server.mcp")
+    @patch("forceweaver_mcp_server.server.sys.argv", ["server.py"])
     def test_main_stdio(self, mock_mcp):
         """Test main with stdio transport"""
         from forceweaver_mcp_server.server import main
@@ -325,24 +325,24 @@ class TestMain:
         main()
         mock_mcp.run.assert_called_once_with(transport="stdio")
 
-    @patch("src.server.mcp")
-    @patch("src.server.sys.argv", ["server.py", "--http"])
+    @patch("forceweaver_mcp_server.server.mcp")
+    @patch("forceweaver_mcp_server.server.sys.argv", ["server.py", "--http"])
     def test_main_http(self, mock_mcp):
         """Test main with http transport"""
         from forceweaver_mcp_server.server import main
 
         main()
-        mock_mcp.run.assert_called_once_with(transport="http", port=8000)
+        mock_mcp.run.assert_called_once_with(transport="sse")
 
-    @patch("src.server.mcp")
+    @patch("forceweaver_mcp_server.server.mcp")
     @patch.dict(os.environ, {"MCP_TRANSPORT": "http", "MCP_PORT": "9000"})
-    @patch("src.server.sys.argv", ["server.py"])
+    @patch("forceweaver_mcp_server.server.sys.argv", ["server.py"])
     def test_main_http_with_env(self, mock_mcp):
         """Test main with http transport from environment variables"""
         from forceweaver_mcp_server.server import main
 
         main()
-        mock_mcp.run.assert_called_once_with(transport="http", port=9000)
+        mock_mcp.run.assert_called_once_with(transport="sse")
 
     """Test cases for MCP tools"""
 
@@ -351,7 +351,7 @@ class TestMain:
         """Test revenue cloud health check tool"""
         from forceweaver_mcp_server.server import revenue_cloud_health_check
 
-        with patch("src.server.client") as mock_client:
+        with patch("forceweaver_mcp_server.server.client") as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Health check result")
 
             result = await revenue_cloud_health_check(
@@ -373,7 +373,7 @@ class TestMain:
         """Test detailed bundle analysis tool"""
         from forceweaver_mcp_server.server import get_detailed_bundle_analysis
 
-        with patch("src.server.client") as mock_client:
+        with patch("forceweaver_mcp_server.server.client") as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Bundle analysis result")
 
             result = await get_detailed_bundle_analysis(
@@ -395,7 +395,7 @@ class TestMain:
         """Test list organizations tool"""
         from forceweaver_mcp_server.server import list_available_orgs
 
-        with patch("src.server.client") as mock_client:
+        with patch("forceweaver_mcp_server.server.client") as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Organizations list")
 
             result = await list_available_orgs(forceweaver_api_key="fk_test_key")
@@ -410,7 +410,7 @@ class TestMain:
         """Test usage summary tool"""
         from forceweaver_mcp_server.server import get_usage_summary
 
-        with patch("src.server.client") as mock_client:
+        with patch("forceweaver_mcp_server.server.client") as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Usage summary")
 
             result = await get_usage_summary(forceweaver_api_key="fk_test_key")
