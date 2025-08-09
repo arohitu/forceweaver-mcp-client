@@ -112,7 +112,8 @@ class ForceWeaverMCPClient:
         """Process API response with detailed error handling"""
         execution_time = int((time.time() - start_time) * 1000)
         logger.info(
-            f"API call to {endpoint} completed in {execution_time}ms (HTTP {response.status})"
+            f"API call to {endpoint} completed in {execution_time}ms "
+            f"(HTTP {response.status})"
         )
 
         if response.status == 200:
@@ -142,36 +143,37 @@ class ForceWeaverMCPClient:
         elif response.status == 401:
             raise AuthenticationError(
                 "❌ Authentication Failed\n\n"
-                + "Your ForceWeaver API key is invalid or expired.\n"
-                + "Please check your key at: https://mcp.forceweaver.com/dashboard/keys"
+                "Your ForceWeaver API key is invalid or expired.\n"
+                "Please check your key at: https://mcp.forceweaver.com/dashboard/keys"
             )
 
         elif response.status == 403:
             raise AuthenticationError(
                 "❌ Access Denied\n\n"
-                + "Your subscription doesn't include this feature.\n"
-                + "Upgrade at: https://mcp.forceweaver.com/dashboard/billing"
+                "Your subscription doesn't include this feature.\n"
+                "Upgrade at: https://mcp.forceweaver.com/dashboard/billing"
             )
 
         elif response.status == 429:
             raise ForceWeaverError(
                 "❌ Rate Limited\n\n"
-                + "You've exceeded your usage limits.\n"
-                + "Check your usage at: https://mcp.forceweaver.com/dashboard/usage"
+                "You've exceeded your usage limits.\n"
+                "Check your usage at: https://mcp.forceweaver.com/dashboard/usage"
             )
 
         elif response.status == 404:
             raise ForceWeaverError(
                 "❌ Salesforce Org Not Found\n\n"
-                + "The specified Salesforce org was not found in your account.\n"
-                + "Add it at: https://mcp.forceweaver.com/dashboard/orgs"
+                "The specified Salesforce org was not found in your account.\n"
+                "Add it at: https://mcp.forceweaver.com/dashboard/orgs"
             )
 
         else:
             error_text = await response.text()
             raise ForceWeaverError(
                 f"❌ Service Error (HTTP {response.status})\n\n"
-                + f"{error_text}\n\nContact support: https://mcp.forceweaver.com/support"
+                f"{error_text}\n\n"
+                "Contact support: https://mcp.forceweaver.com/support"
             )
 
     def _format_health_check_response(self, result):
@@ -192,8 +194,10 @@ class ForceWeaverMCPClient:
             lines.append(f"⏱️ Execution Time: {summary.get('execution_time_ms', 0)}ms")
             lines.append(f"📅 Generated: {result.get('timestamp', 'N/A')}")
             lines.append("")
+            grade = self._get_grade(summary.get("overall_score", 0))
             lines.append(
-                f"🎯 **Overall Health Score: {summary.get('overall_score', 0)}%** (Grade: {self._get_grade(summary.get('overall_score', 0))})"
+                f"🎯 **Overall Health Score: {summary.get('overall_score', 0)}%** "
+                f"(Grade: {grade})"
             )
             lines.append("")
 
@@ -223,7 +227,8 @@ class ForceWeaverMCPClient:
 
         lines.append("")
         lines.append(
-            "For more detailed analysis or specific recommendations, please let me know!"
+            "For more detailed analysis or specific recommendations, "
+            "please let me know!"
         )
 
         return "\n".join(lines)
@@ -284,16 +289,20 @@ async def revenue_cloud_health_check(
 
     # Enhanced debugging for credential issues
     logger.info(
-        f"Revenue Cloud Health Check - API key provided as param: {bool(forceweaver_api_key)}"
+        "Revenue Cloud Health Check - API key provided as param: "
+        f"{bool(forceweaver_api_key)}"
     )
     logger.info(
-        f"Revenue Cloud Health Check - API key from env: {bool(os.environ.get('FORCEWEAVER_API_KEY'))}"
+        "Revenue Cloud Health Check - API key from env: "
+        f"{bool(os.environ.get('FORCEWEAVER_API_KEY'))}"
     )
     logger.info(
-        f"Revenue Cloud Health Check - Org ID provided as param: {bool(salesforce_org_id)}"
+        "Revenue Cloud Health Check - Org ID provided as param: "
+        f"{bool(salesforce_org_id)}"
     )
     logger.info(
-        f"Revenue Cloud Health Check - Org ID from env: {bool(os.environ.get('SALESFORCE_ORG_ID'))}"
+        "Revenue Cloud Health Check - Org ID from env: "
+        f"{bool(os.environ.get('SALESFORCE_ORG_ID'))}"
     )
     logger.info(
         f"Revenue Cloud Health Check - Final API key available: {bool(api_key)}"
@@ -305,13 +314,18 @@ async def revenue_cloud_health_check(
     if not api_key:
         logger.error("❌ API key missing in revenue_cloud_health_check")
         raise AuthenticationError(
-            "I cannot analyze your Revenue Cloud bundle structure because your ForceWeaver API key is missing, invalid, or expired. Please update your API key in the prompt or environment and try again. If you need help updating the key, let me know!"
+            "I cannot analyze your Revenue Cloud bundle structure because your "
+            "ForceWeaver API key is missing, invalid, or expired. Please update your "
+            "API key in the prompt or environment and try again. If you need help "
+            "updating the key, let me know!"
         )
 
     if not org_id:
         logger.error("❌ Org ID missing in revenue_cloud_health_check")
         raise AuthenticationError(
-            "To analyze your Revenue Cloud bundle structure, I need your Salesforce org ID. Please provide your Salesforce org identifier so I can proceed with the analysis."
+            "To analyze your Revenue Cloud bundle structure, I need your Salesforce "
+            "org ID. Please provide your Salesforce org identifier so I can "
+            "proceed with the analysis."
         )
 
     logger.info(f"Starting health check for org: {org_id}")
@@ -357,12 +371,14 @@ async def get_detailed_bundle_analysis(
 
     if not api_key:
         raise AuthenticationError(
-            "ForceWeaver API key is required. Provide it as parameter or set FORCEWEAVER_API_KEY environment variable."
+            "ForceWeaver API key is required. Provide it as parameter or set "
+            "FORCEWEAVER_API_KEY environment variable."
         )
 
     if not org_id:
         raise AuthenticationError(
-            "Salesforce Org ID is required. Provide it as parameter or set SALESFORCE_ORG_ID environment variable."
+            "Salesforce Org ID is required. Provide it as parameter or set "
+            "SALESFORCE_ORG_ID environment variable."
         )
 
     logger.info(f"Starting detailed bundle analysis for org: {org_id}")
@@ -393,7 +409,8 @@ async def list_available_orgs(forceweaver_api_key: Optional[str] = None) -> str:
 
     if not api_key:
         raise AuthenticationError(
-            "ForceWeaver API key is required. Provide it as parameter or set FORCEWEAVER_API_KEY environment variable."
+            "ForceWeaver API key is required. Provide it as parameter or set "
+            "FORCEWEAVER_API_KEY environment variable."
         )
 
     logger.info("Listing available orgs")
@@ -419,7 +436,8 @@ async def get_usage_summary(forceweaver_api_key: Optional[str] = None) -> str:
 
     if not api_key:
         raise AuthenticationError(
-            "ForceWeaver API key is required. Provide it as parameter or set FORCEWEAVER_API_KEY environment variable."
+            "ForceWeaver API key is required. Provide it as parameter or set "
+            "FORCEWEAVER_API_KEY environment variable."
         )
 
     logger.info("Getting usage summary")
