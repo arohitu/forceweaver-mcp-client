@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 import time
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import aiohttp
 from mcp.server.fastmcp import FastMCP
@@ -36,12 +36,12 @@ class ForceWeaverMCPClient:
 
     def __init__(self, api_base_url: str = API_BASE_URL):
         self.api_base_url = api_base_url.rstrip("/")
-        self.session = None
+        self.session: Optional[aiohttp.ClientSession] = None
         self.timeout = aiohttp.ClientTimeout(total=120)
 
-    async def _get_session(self):
+    async def _get_session(self) -> aiohttp.ClientSession:
         """Get or create HTTP session with proper SSL handling"""
-        if not self.session or self.session.closed:
+        if self.session is None or self.session.closed:
             import ssl
 
             import certifi
@@ -108,7 +108,9 @@ class ForceWeaverMCPClient:
             logger.error(f"Unexpected error calling {endpoint}: {e}")
             raise ForceWeaverError(f"Unexpected error: {str(e)}")
 
-    async def _process_response(self, response, start_time, endpoint):
+    async def _process_response(
+        self, response: aiohttp.ClientResponse, start_time: float, endpoint: str
+    ) -> str:
         """Process API response with detailed error handling"""
         execution_time = int((time.time() - start_time) * 1000)
         logger.info(
@@ -130,7 +132,7 @@ class ForceWeaverMCPClient:
             # Return formatted output if available (MCP format)
             if "formatted_output" in result:
                 logger.info("Using formatted_output from backend")
-                return result["formatted_output"]
+                return str(result["formatted_output"])
             elif "success" in result and result["success"]:
                 logger.info("Using custom formatting for raw JSON")
                 # Format the raw JSON response for better display
@@ -176,7 +178,7 @@ class ForceWeaverMCPClient:
                 "Contact support: https://mcp.forceweaver.com/support"
             )
 
-    def _format_health_check_response(self, result):
+    def _format_health_check_response(self, result: dict) -> str:
         """Format health check response for better display in chat"""
         lines = []
 
@@ -233,7 +235,7 @@ class ForceWeaverMCPClient:
 
         return "\n".join(lines)
 
-    def _get_grade(self, score):
+    def _get_grade(self, score: Union[int, float]) -> str:
         """Convert numeric score to letter grade"""
         if score >= 90:
             return "A+"
@@ -248,10 +250,11 @@ class ForceWeaverMCPClient:
         else:
             return "F"
 
-    async def close(self):
+    async def close(self) -> None:
         """Close HTTP session"""
         if self.session:
             await self.session.close()
+            self.session = None
 
 
 # Global client instance
@@ -483,7 +486,7 @@ def main():
             # HTTP transport for remote server hosting
             port = int(os.environ.get("MCP_PORT", "8000"))
             logger.info(f"Starting HTTP server on port {port}")
-            mcp.run(transport="http", port=port)
+            mcp.run(transport="sse")
         else:
             # STDIO transport for local clients
             mcp.run(transport="stdio")
