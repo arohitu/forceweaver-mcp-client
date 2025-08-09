@@ -275,9 +275,12 @@ async def revenue_cloud_health_check(
     - Attribute picklist integrity validation
 
     Args:
-        forceweaver_api_key: Your ForceWeaver API key (optional if set via environment)
-        salesforce_org_id: Your Salesforce org identifier (optional if set via environment)
-        check_types: Optional list of specific checks to run (default: all basic checks)
+        forceweaver_api_key: Your ForceWeaver API key (optional if set
+            via environment)
+        salesforce_org_id: Your Salesforce org identifier (optional if set
+            via environment)
+        check_types: Optional list of specific checks to run (default: all
+            basic checks)
         api_version: Optional Salesforce API version (default: v64.0)
 
     Returns:
