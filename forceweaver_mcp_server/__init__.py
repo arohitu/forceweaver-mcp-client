@@ -15,12 +15,12 @@ __author__ = "ForceWeaver Team"
 __email__ = "support@forceweaver.com"
 __license__ = "MIT"
 
+from .exceptions import AuthenticationError, ConnectionError, ForceWeaverError
 from .server import ForceWeaverMCPClient
-from .exceptions import ForceWeaverError, AuthenticationError, ConnectionError
 
 __all__ = [
     "ForceWeaverMCPClient",
-    "ForceWeaverError", 
+    "ForceWeaverError",
     "AuthenticationError",
-    "ConnectionError"
+    "ConnectionError",
 ]

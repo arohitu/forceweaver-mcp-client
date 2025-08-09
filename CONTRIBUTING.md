@@ -168,8 +168,8 @@ pytest -v
 
 ```python
 import pytest
-from src import ForceWeaverMCPClient
-from src.exceptions import AuthenticationError
+from forceweaver_mcp_server import ForceWeaverMCPClient
+from forceweaver_mcp_server.exceptions import AuthenticationError
 
 class TestForceWeaverMCPClient:
     @pytest.fixture

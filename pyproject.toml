@@ -55,11 +55,11 @@ Repository = "https://github.com/forceweaver/forceweaver-mcp-server.git"
 Changelog = "https://github.com/forceweaver/forceweaver-mcp-server/blob/main/CHANGELOG.md"
 
 [project.scripts]
-forceweaver-mcp = "src.server:main"
+forceweaver-mcp = "forceweaver_mcp_server.server:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*"]
+include = ["forceweaver_mcp_server*"]
 
 [tool.black]
 line-length = 88
@@ -86,7 +86,7 @@ multi_line_output = 3
 line_length = 88
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
@@ -110,7 +110,7 @@ python_functions = ["test_*"]
 asyncio_mode = "auto"
 
 [tool.coverage.run]
-source = ["src"]
+source = ["forceweaver_mcp_server"]
 omit = [
     "*/tests/*",
     "*/test_*",
@@ -130,3 +130,7 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+
+[tool.flake8]
+max-line-length = 88
+ignore = "E203, W503"
