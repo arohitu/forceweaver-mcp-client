@@ -24,10 +24,10 @@ jobs:
           pip install -e .[dev]
       - name: Lint, Format, and Type Check
         run: |
-          flake8 forceweaver-mcp-server tests
-          mypy forceweaver-mcp-server
-          black --check forceweaver-mcp-server tests
-          isort --check-only forceweaver-mcp-server tests
+          flake8 forceweaver_mcp_server tests
+          mypy forceweaver_mcp_server
+          black --check forceweaver_mcp_server tests
+          isort --check-only forceweaver_mcp_server tests
 
   # Modified test job that now depends on the lint job
   test:
@@ -50,7 +50,7 @@ jobs:
         pip install -e .[dev]
     - name: Test with pytest
       run: |
-        pytest tests/ --cov=forceweaver-mcp-server --cov-report=xml --cov-report=term
+        pytest tests/ --cov=forceweaver_mcp_server --cov-report=xml --cov-report=term
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:

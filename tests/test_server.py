@@ -6,8 +6,8 @@ import pytest
 import asyncio
 from unittest.mock import AsyncMock, patch, MagicMock
 from aioresponses import aioresponses
-from src import ForceWeaverMCPClient
-from src.exceptions import (
+from forceweaver_mcp_server import ForceWeaverMCPClient
+from forceweaver_mcp_server.exceptions import (
     ForceWeaverError,
     AuthenticationError,
     ConnectionError
@@ -254,7 +254,7 @@ class TestForceWeaverMCPClient:
     @patch.dict(os.environ, {"FORCEWEAVER_API_KEY": "fk_env_key", "SALESFORCE_ORG_ID": "env_org"})
     async def test_revenue_cloud_health_check_tool_with_env_vars(self):
         """Test health check tool with environment variables"""
-        from src.server import revenue_cloud_health_check
+        from forceweaver_mcp_server.server import revenue_cloud_health_check
         
         with patch('src.server.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Health check result")
@@ -273,7 +273,7 @@ class TestForceWeaverMCPClient:
     @pytest.mark.asyncio
     async def test_revenue_cloud_health_check_tool_missing_credentials(self):
         """Test health check tool with missing credentials"""
-        from src.server import revenue_cloud_health_check
+        from forceweaver_mcp_server.server import revenue_cloud_health_check
         
         with pytest.raises(AuthenticationError) as exc_info:
             await revenue_cloud_health_check()
@@ -283,7 +283,7 @@ class TestForceWeaverMCPClient:
     @pytest.mark.asyncio
     async def test_bundle_analysis_tool_missing_credentials(self):
         """Test bundle analysis tool with missing credentials"""
-        from src.server import get_detailed_bundle_analysis
+        from forceweaver_mcp_server.server import get_detailed_bundle_analysis
         
         with pytest.raises(AuthenticationError) as exc_info:
             await get_detailed_bundle_analysis()
@@ -293,7 +293,7 @@ class TestForceWeaverMCPClient:
     @pytest.mark.asyncio
     async def test_list_orgs_tool_missing_credentials(self):
         """Test list orgs tool with missing credentials"""
-        from src.server import list_available_orgs
+        from forceweaver_mcp_server.server import list_available_orgs
         
         with pytest.raises(AuthenticationError) as exc_info:
             await list_available_orgs()
@@ -303,7 +303,7 @@ class TestForceWeaverMCPClient:
     @pytest.mark.asyncio
     async def test_usage_summary_tool_missing_credentials(self):
         """Test usage summary tool with missing credentials"""
-        from src.server import get_usage_summary
+        from forceweaver_mcp_server.server import get_usage_summary
         
         with pytest.raises(AuthenticationError) as exc_info:
             await get_usage_summary()
@@ -317,7 +317,7 @@ class TestMain:
     @patch('src.server.sys.argv', ['server.py'])
     def test_main_stdio(self, mock_mcp):
         """Test main with stdio transport"""
-        from src.server import main
+        from forceweaver_mcp_server.server import main
         main()
         mock_mcp.run.assert_called_once_with(transport="stdio")
         
@@ -325,7 +325,7 @@ class TestMain:
     @patch('src.server.sys.argv', ['server.py', '--http'])
     def test_main_http(self, mock_mcp):
         """Test main with http transport"""
-        from src.server import main
+        from forceweaver_mcp_server.server import main
         main()
         mock_mcp.run.assert_called_once_with(transport="http", port=8000)
         
@@ -334,7 +334,7 @@ class TestMain:
     @patch('src.server.sys.argv', ['server.py'])
     def test_main_http_with_env(self, mock_mcp):
         """Test main with http transport from environment variables"""
-        from src.server import main
+        from forceweaver_mcp_server.server import main
         main()
         mock_mcp.run.assert_called_once_with(transport="http", port=9000)
 
@@ -343,7 +343,7 @@ class TestMain:
     @pytest.mark.asyncio
     async def test_revenue_cloud_health_check_tool(self):
         """Test revenue cloud health check tool"""
-        from src.server import revenue_cloud_health_check
+        from forceweaver_mcp_server.server import revenue_cloud_health_check
         
         with patch('src.server.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Health check result")
@@ -366,7 +366,7 @@ class TestMain:
     @pytest.mark.asyncio
     async def test_bundle_analysis_tool(self):
         """Test detailed bundle analysis tool"""
-        from src.server import get_detailed_bundle_analysis
+        from forceweaver_mcp_server.server import get_detailed_bundle_analysis
         
         with patch('src.server.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Bundle analysis result")
@@ -389,7 +389,7 @@ class TestMain:
     @pytest.mark.asyncio
     async def test_list_orgs_tool(self):
         """Test list organizations tool"""
-        from src.server import list_available_orgs
+        from forceweaver_mcp_server.server import list_available_orgs
         
         with patch('src.server.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Organizations list")
@@ -408,7 +408,7 @@ class TestMain:
     @pytest.mark.asyncio
     async def test_usage_summary_tool(self):
         """Test usage summary tool"""
-        from src.server import get_usage_summary
+        from forceweaver_mcp_server.server import get_usage_summary
         
         with patch('src.server.client') as mock_client:
             mock_client.call_mcp_api = AsyncMock(return_value="Usage summary")
