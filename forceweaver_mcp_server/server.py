@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ForceWeaver MCP Client
-Professional MCP client for ForceWeaver Revenue Cloud health checking service.
+Professional MCP client for ForceWeaver Revenue Cloud health check service.
 """
 import asyncio
 import logging
