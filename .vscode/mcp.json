@@ -3,7 +3,7 @@
     "forceweaver": {
       "type": "stdio",
       "command": "python3",
-      "args": ["-m", "src"],
+      "args": ["-m", "forceweaver_mcp_server"],
       "env": {
         "FORCEWEAVER_API_URL": "https://mcp.forceweaver.com",
         "FORCEWEAVER_API_KEY": "fk_cb8Fa1tL3czFIuqZgx-88M1el1WLNAJNWw5kdcmf1uM",
