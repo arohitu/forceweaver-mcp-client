@@ -21,9 +21,12 @@ class TestForceWeaverMCPClient:
     """Test cases for ForceWeaver MCP Client"""
 
     @pytest.fixture
-    def client(self):
+    async def client(self):
         """Create a test client instance"""
-        return ForceWeaverMCPClient()
+        client = ForceWeaverMCPClient()
+        yield client
+        # Cleanup: ensure session is closed
+        await client.close()
 
     @pytest.fixture
     def mock_session_response(self):
