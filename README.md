@@ -1,4 +1,4 @@
-# 🚀 **ForceWeaver MCP Client**
+# 🚀 **Forceweaver MCP Client**
 
 **Professional Salesforce Revenue Cloud health checking for AI agents**
 
