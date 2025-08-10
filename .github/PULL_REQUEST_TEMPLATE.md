@@ -10,7 +10,7 @@ Brief description of the changes.
 **Testing**
 - [ ] Tests pass locally
 - [ ] New tests added for new functionality
-- ] Manual testing completed
+- [ ] Manual testing completed
 
 **Checklist**
 - [ ] My code follows the style guidelines of this project
